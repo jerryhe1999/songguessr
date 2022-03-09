@@ -26,7 +26,7 @@ export default function Home() {
   }, []);
 
   return (
-    <Layout title={"home"}>
+    <Layout title={"Home"}>
       <h1>Welcome!</h1>
       <button onClick={async () => {
         const res = await fetch('/api/logout')

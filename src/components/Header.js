@@ -33,7 +33,7 @@ function Header() {
       css={styles}
     >
       <Container className="navbar-container">
-        <Navbar.Brand onClick={()=>navigate('/')}>
+        <Navbar.Brand>
           <Spotify
             height={60}
             width={60}
@@ -57,6 +57,12 @@ function Header() {
             </Nav.Link>
             <Nav.Link href='/settings' className="nav-link">
               Settings
+            </Nav.Link>
+            <Nav.Link href='/leaderboard' className="nav-link">
+              Leaderboard
+            </Nav.Link>
+            <Nav.Link href='/stats' className="nav-link">
+              Statistics
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
