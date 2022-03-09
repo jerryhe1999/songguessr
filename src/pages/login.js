@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
+import { Form, Button, Row } from "react-bootstrap";
+import styles from "../styles/Login.module.css";
 
 function Login() {
   const router = useRouter();
@@ -31,27 +33,41 @@ function Login() {
   return (
     <Layout title="Log In">
       <h1 className="text-md-center text-light">Log In</h1>
-      <form onSubmit={handleLogin}>
-        <div>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+      <div className={styles.form}>
+        <div className={styles.container}>
+          <div className={styles.formGroup}>
+            <form onSubmit={handleLogin}>
+              <Form.Group role="form">
+                <Form.Group controlId="formBasicName">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formBasicPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Form.Group>
+                <p/>
+                <p/>
+                <Row className="align-items-center">
+                  <Button variant="success" type="submit" className="center">
+                    Login
+                  </Button>
+                </Row>
+              </Form.Group>
+            </form>
+          </div>
         </div>
-        <div>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div>
-          <button>Login</button>
-        </div>
-      </form>
+      </div>
     </Layout>
   );
 }
