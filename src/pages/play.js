@@ -7,7 +7,7 @@ import styles from "../styles/Play.module.css";
 export default function play() {
   return (
     <Layout title="Play" css={false}>
-      <h1 className="text-md-center">Time Left: 15 Seconds</h1>
+      <h1 className="text-md-center pt-5">Time Left: 15 Seconds</h1>
       <Carousel style={{ width: "100vw" }} interval={null} wrap={false}>
         {data.map((item, key) => (
           <Carousel.Item eventKey={key}>
@@ -17,21 +17,31 @@ export default function play() {
                   <Image src={data.image} width={360} height={180} />
                 </div>
                 <Card className={"bg-dark text-white"} border="success">
-                  <Form.Check
-                    type={'radio'}
-                    id={key}
-                    label={item.option_1}
-                  />
-                  <Form.Check
-                    type={'radio'}
-                    id={key}
-                    label={item.option_2}
-                  />
-                  <Form.Check
-                    type={'radio'}
-                    id={key}
-                    label={item.option_3}
-                  /> 
+                  <Container>
+                  <Form className="text-white p-2">
+                    <Form.Check
+                      type={"radio"}
+                      id={key}
+                      label={item.option_1}
+                      name={`group${key}`}
+                      isValid
+                    />
+                    <Form.Check
+                      type={"radio"}
+                      id={key}
+                      label={item.option_2}
+                      name={`group${key}`}
+                      isValid
+                    />
+                    <Form.Check
+                      type={"radio"}
+                      id={key}
+                      label={item.option_3}
+                      name={`group${key}`}
+                      isValid
+                    />
+                  </Form>
+                  </Container>  
                 </Card>
               </div>
             </Container>
