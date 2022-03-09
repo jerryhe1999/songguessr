@@ -29,7 +29,8 @@ function Login() {
   }
 
   return (
-    <Layout title="About DesignDen">
+    <Layout title="Log In">
+      <h1 className="text-md-center text-light">Log In</h1>
       <form onSubmit={handleLogin}>
         <div>
           <input

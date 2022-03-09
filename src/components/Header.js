@@ -49,13 +49,13 @@ function Header() {
             className="me-auto nav-links justify-content-end"
             style={{ width: "100%" }}
           >
-            <Nav.Link href='/' className="nav-link">
+            <Nav.Link href='/play' className="nav-link">
               Play
             </Nav.Link>
             <Nav.Link href='/' className="nav-link">
               Login
             </Nav.Link>
-            <Nav.Link href='/' className="nav-link">
+            <Nav.Link href='/settings' className="nav-link">
               Settings
             </Nav.Link>
           </Nav>

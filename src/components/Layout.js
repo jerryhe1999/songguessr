@@ -29,7 +29,7 @@ export default function Layout({title, keywords, description, children}) {
 }
 
 Layout.defaultProps = {
-    title: 'DesignDen | Find the best designs',
-    description: 'Find sleek and modern website solutions',
-    keywords: 'Website, template, designden'
+    title: 'Songuessr | Test Your Music Knowledge',
+    description: 'Test your muisc knowledge and guess songs in your playlist.',
+    keywords: 'spotify, music, guessing'
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import fetch from 'isomorphic-unfetch';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import Layout from "../components/Layout";
 
 export default function Home() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <Layout title={"home"}>
       <h1>Welcome!</h1>
       <button onClick={async () => {
         const res = await fetch('/api/logout')
@@ -37,6 +38,6 @@ export default function Home() {
       </button>
       {user.name && <p>Name: {user.name}</p>}
       {user.email && <p>Email: {user.email}</p>}
-    </div>
+    </Layout>
   );
 }

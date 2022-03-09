@@ -14,7 +14,7 @@ export default function Footer() {
     <div css={styles}>
         <Container>
             <p className="text-sm-center">
-                &copy;{new Date().getFullYear()} WeatherDB  - All Rights Reserved
+                &copy;{new Date().getFullYear()} Songuessr  - All Rights Reserved
             </p>
 
         </Container>
