@@ -6,7 +6,7 @@ import Footer from './Footer'
 import { useRouter } from 'next/router'
 
 
-export default function Layout({title, keywords, description, children}) {
+export default function Layout({title, keywords, description, children, css = true}) {
     
     const router = useRouter()
 
@@ -20,7 +20,7 @@ export default function Layout({title, keywords, description, children}) {
             <Header/>
             {/*router.pathname === '/' && <Showcase />*/}
 
-            <div className = {styles.container}> 
+            <div className = {css?styles.container: " "}> 
                 {children}
             </div>
             <Footer/>

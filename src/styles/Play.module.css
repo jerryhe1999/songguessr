@@ -1,0 +1,14 @@
+.carItem{
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    padding-bottom: 8rem;
+}
+
+.carPhoto{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    padding-bottom: 3rem;
+}
