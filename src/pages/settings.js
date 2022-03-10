@@ -1,7 +1,6 @@
 import React from 'react'
 import Layout from "../components/Layout";
 import {Container, Button, Row, Col} from 'react-bootstrap'
-import { Spotify } from "react-bootstrap-icons";
 
 export default function settings() {
   return (
