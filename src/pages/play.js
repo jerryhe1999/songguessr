@@ -16,9 +16,10 @@ export default function play() {
                 <div className={styles.carPhoto}>
                   <Image src={data.image} width={360} height={180} />
                 </div>
-                <Card className={"bg-dark text-white"} border="success">
+                <div className={styles.carPhoto}>
+                <Card className={"bg-dark text-white"}  style={{ width: '30rem' }} border="success">
                   <Container>
-                  <Form className="text-white p-2">
+                  <Form className="text-md-center p-2">
                     <Form.Check
                       type={"radio"}
                       id={key}
@@ -43,6 +44,7 @@ export default function play() {
                   </Form>
                   </Container>  
                 </Card>
+                </div>
               </div>
             </Container>
           </Carousel.Item>
