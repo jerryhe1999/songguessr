@@ -7,10 +7,25 @@
  * @FilePath: \cs499\song-guessr\src\pages\api\tokenExchange.js
  */
 import fetch from 'isomorphic-unfetch';
+import { useState } from 'react';
 
 export default async (req, res) => {
-  
+  const [ user, setUser ] = useState({});
   const { token } = req.body;
+  console.log("req==", req)
+  useEffect(() => {
+    async function fetchData() {
+      const res = await fetch('/api/user');
+      if (res.status === 401) {
+        console.log("== Error: Unauthorized");
+      } else {
+        const body = await res.json();
+        setUser(body);
+      }
+    }
+    fetchData();
+  }, []);
+  console.log("user===", user)
   if (!token) {
     res.status(400).send({ err: "Must specify auth code" });
   }

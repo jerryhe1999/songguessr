@@ -8,8 +8,8 @@
  */
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-
-import SpotifyLoginLink from '../../components/SpotifyLoginLink'
+import SpotifyLoginLink from '../../components/SpotifyLoginLink';
+import SpotifyPlayLink from 'src/components/SpotifyPlayLink';
 
 export default function SpotifyLogin() {
   const [ user, setUser ] = useState({});
@@ -40,7 +40,7 @@ export default function SpotifyLogin() {
           }
       });
       const spotifyResBody = await spotifyRes.json();
-      console.log(spotifyResBody);
+      console.log("spotify return===", spotifyResBody);
       setUser(spotifyResBody);
       }
     }
@@ -48,7 +48,8 @@ export default function SpotifyLogin() {
       exchangeForAccessToken(router.query.code);
     }
   }, [ router.query.code ]);
-
+  
+  var count = 0;
   return (
     <div>
       {error && <p>Error: {error}</p>}
@@ -56,6 +57,7 @@ export default function SpotifyLogin() {
       <SpotifyLoginLink />
       {user.display_name && <p>Name: {user.display_name}</p>}
       {user.email && <p>Email: {user.email}</p>}
+      <SpotifyPlayLink />
     </div>
   );
 }

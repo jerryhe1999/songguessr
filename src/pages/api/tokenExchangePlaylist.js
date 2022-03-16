@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const redirect_uri = process.env.NEXT_PUBLIC_REDIRECT_URI;
+const redirect_play_uri = process.env.NEXT_PUBLIC_REDIRECT_PLAY_URI;
 //const redis_secret = process.env.REDIS_SECRET;
 
 const basic = Buffer.from(client_id+":"+client_secret, 'utf8').toString('base64');
@@ -37,9 +38,9 @@ export default async (req, res) => {
       method: 'POST',
       body: new URLSearchParams({
         code: code,
-        redirect_uri: redirect_uri,
+        redirect_uri: redirect_play_uri,
         grant_type: 'authorization_code',
-        scope: "user-read-email"
+        scope: "playlist-read-private"
       }).toString(),
       headers: {
         Authorization: `Basic ${basic}`,
