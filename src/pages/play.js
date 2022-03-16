@@ -8,9 +8,6 @@ import { useRouter } from "next/router";
 export default function play() {
   const [ error, setError ] = useState("");
   const router = useRouter();
-  const [ round1, setRound1 ] = useState([]);
-  const [ round2, setRound2 ] = useState([]);
-  const [ round3, setRound3 ] = useState([]);
   const [ allRounds, setAllRounds ] = useState([]);
 
   var songs;
@@ -94,9 +91,6 @@ export default function play() {
             
           }
           console.log("chosen songs==", gameSongs)
-          setRound1(gameSongs.round[0].songs)
-          setRound2(gameSongs.round[1].songs)
-          setRound3(gameSongs.round[2].songs)
           setAllRounds(gameSongs.round)
         }
       }
