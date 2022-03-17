@@ -175,9 +175,9 @@ export default function play() {
                     {round.songs.map((item, key1) => console.log("==item", item) || (
                     <Form.Check
                       type={"radio"}
-                      id={key1}
+                      id={key}
                       label={`${item.artist}, ${item.name}, ${item.albumName}`}
-                      name={`group${key1}`}
+                      name={`group${key}`}
                       isValid
                     />
                     ))}
