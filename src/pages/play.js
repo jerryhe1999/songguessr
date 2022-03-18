@@ -29,8 +29,11 @@ export default function play() {
       setAnswerStatus("Incorrect")
     }
     // Give user time to acknowledge result
-    setTimeout('', 5000)
-    nextRound();
+    setTimeout(function() {
+      setAnswerStatus("")
+      nextRound();
+    }, 5000)
+    
   }
 
   const settings = {
