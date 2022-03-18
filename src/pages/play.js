@@ -14,7 +14,7 @@ export default function play() {
   const [ roundCounter, setRoundCounter ] = useState(1);
   const [ songUrl, setSongUrl ] = useState("");
   const [ correctSongs, setCorrectSongs ] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(5);
+  const [timeLeft, setTimeLeft] = useState(30);
   const router = useRouter();
   const ref = useRef(null);
   const nextRound = () => {
