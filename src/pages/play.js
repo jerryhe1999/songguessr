@@ -9,14 +9,20 @@ import ReactAudioPlayer from "react-audio-player";
 export default function play() {
   const [ error, setError ] = useState("");
   const [ allRounds, setAllRounds ] = useState([]);
-  const [ secondsRemaining, setSecondsRemaining ] = useState(30);
   const [ theScore, setScore ] = useState(0);
   const [ answerStatus, setAnswerStatus ] = useState("");
-  const [ roundCounter, setRoundCounter ] = useState(-1);
+  const [ roundCounter, setRoundCounter ] = useState(1);
   const [ songUrl, setSongUrl ] = useState("");
-  const [correctSongs, setCorrectSongs] = useState([]);
+  const [ correctSongs, setCorrectSongs ] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(5);
   const router = useRouter();
   const ref = useRef(null);
+  const nextRound = () => {
+    ref.current.next();
+  }
+  const incrementRound = () => {
+    setRoundCounter(roundCounter + 1);
+  }
   //var correctSongs = [];
   var songs;
   var playlists;
@@ -34,9 +40,26 @@ export default function play() {
     ]
   };
 
-  const nextRound = () => {
-    ref.current.next();
-  }
+  
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      console.log("!!!")
+      setAnswerStatus("Incorrect")
+      setRoundCounter(prevCount => prevCount + 1)
+      setTimeout(function() {
+        setAnswerStatus("")
+        nextRound();
+        nextSong();
+        setTimeLeft(30)
+      }, 5000)
+    }
+    const intervalId = setInterval(() => {
+      setTimeLeft((t) => t - 1);
+    }, 1000);
+    
+    return () => clearInterval(intervalId);
+  }, []);
 
   function handleRadioBtn(e){
     console.log(e)
@@ -44,9 +67,12 @@ export default function play() {
       console.log("Correct!!!")
       setAnswerStatus("Correct!!!")
       setScore(theScore + 100)
+      setRoundCounter(prevCount => prevCount + 1)
     } else {
       setAnswerStatus("Incorrect")
+      setRoundCounter(prevCount => prevCount + 1)
     }
+    
     // Give user time to acknowledge result
     setTimeout(function() {
       setAnswerStatus("")
@@ -56,9 +82,12 @@ export default function play() {
   }
 
   function nextSong() {
-    setRoundCounter(roundCounter++)
-    console.log("==nextSong call",correctSongs)
-    setSongUrl(correctSongs[roundCounter].preview_url)
+    
+    incrementRound();
+    console.log("roundCounter after inc", roundCounter)
+    console.log("==inside nextSong call", correctSongs)
+    console.log("song to be played next", correctSongs[roundCounter])
+    setSongUrl(correctSongs[roundCounter])
   }
 
   // Randomize order for correct song
@@ -108,40 +137,55 @@ export default function play() {
             }
           });
           const spotifySongsResBody = await spotifySongsRes.json();
-          console.log("songs of first playlist in playlists===", spotifySongsResBody);
-          songs = spotifySongsResBody.items
-          // for each round
-          for (var i = 0; i < 3; i++) {
-            // for each song in the round
-            for (var j = 0; j < 3; j++) {
-              if (j == 0) {
-                // first song, make this the right answer for prototype testing
-                var randNum = Math.floor(Math.random() * (songs.length-1))
-                songs[randNum].track.artist = songs[randNum].track.artists[0].name
-                songs[randNum].track.albumName = songs[randNum].track.album.name
-                songs[randNum].track.guessedCorrect = true
-                gameSongs.round[i].songs[j] = songs[randNum].track
-                //correctSongs.push(gameSongs.round[i].songs[j])
-                setCorrectSongs((currentState) => [...currentState, gameSongs.round[i].songs[j]])
-                console.log(correctSongs)
-              } else {
-                // !!! has possibility to duplicate choice
-                // Create check to prevent same song being chosen twice
-                var randNum = Math.floor(Math.random() * (songs.length-1))
-                songs[randNum].track.artist = songs[randNum].track.artists[0].name
-                songs[randNum].track.albumName = songs[randNum].track.album.name
-                songs[randNum].track.guessedCorrect = false
-                gameSongs.round[i].songs[j] = songs[randNum].track
+          if (spotifySongsResBody) {
+            console.log("songs of first playlist in playlists===", spotifySongsResBody);
+            songs = spotifySongsResBody.items
+            // for each round
+            for (var i = 0; i < 3; i++) {
+              // for each song in the round
+              for (var j = 0; j < 3; j++) {
+                if (j == 0) {
+                  // first song, make this the right answer for prototype testing
+                  var randNum = Math.floor(Math.random() * (songs.length-1))
+                  songs[randNum].track.artist = songs[randNum].track.artists[0].name
+                  songs[randNum].track.albumName = songs[randNum].track.album.name
+                  songs[randNum].track.guessedCorrect = true
+                  gameSongs.round[i].songs[j] = songs[randNum].track
+                  console.log("correctSongs after set",correctSongs)
+                } else {
+                  // !!! has possibility to duplicate choice
+                  // Create check to prevent same song being chosen twice
+                  var randNum = Math.floor(Math.random() * (songs.length-1))
+                  songs[randNum].track.artist = songs[randNum].track.artists[0].name
+                  songs[randNum].track.albumName = songs[randNum].track.album.name
+                  songs[randNum].track.guessedCorrect = false
+                  gameSongs.round[i].songs[j] = songs[randNum].track
+                }
+              }
+              // create list of correct songs for audio output
+            }
+            // Initial song declaration
+            randomizer();
+            console.log("==game songs", gameSongs)
+            console.log("==correct songs", correctSongs)
+            for (var i = 0; i < 3; i++) {
+              for (var j = 0; j < 3; j++) {
+                if (gameSongs.round[i].songs[j].guessedCorrect) {
+                  console.log("guessedCorrect found for round: ", i, gameSongs.round[i].songs[j])
+                  if (i == 0) {
+                    setCorrectSongs([gameSongs.round[i].songs[j].preview_url])
+                    // special case for first. currentSongs is empty on first render
+                    setSongUrl(gameSongs.round[i].songs[j].preview_url) 
+                  } else {
+                    setCorrectSongs((currentState) => [...currentState, gameSongs.round[i].songs[j].preview_url])
+                  }
+                }
               }
             }
-            // create list of correct songs for audio output
+            console.log("==correct songs", correctSongs)
+            console.log("==game songs randomized", gameSongs)
+            setAllRounds(gameSongs.round)
           }
-          nextSong()
-          //setSongUrl(correctSongs[roundCounter].preview_url)
-          randomizer();
-          console.log("==correct songs", correctSongs)
-          console.log("==game songs", gameSongs)
-          setAllRounds(gameSongs.round)
         }
       }
     }
@@ -154,7 +198,7 @@ export default function play() {
     <Layout title="Play" css={false}>
       {error && <p>Error: {error}</p>}
       <h3 className="text-md-center pt-3">Score: {theScore}</h3>
-      <h3 className="text-md-center pt-5">Time Left: {secondsRemaining} Seconds</h3>
+      <h3 className="text-md-center pt-5">Time Left: {timeLeft} Seconds</h3>
       <h3 className="text-md-center pt-5">{answerStatus}</h3>
       <ReactAudioPlayer src={songUrl} autoPlay={true} volume={0.3}/>
       <Carousel 
