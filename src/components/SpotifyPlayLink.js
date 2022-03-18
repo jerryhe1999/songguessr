@@ -17,5 +17,5 @@ export default function SpotifyLoginLink() {
   });
   const baseUrl = "https://accounts.spotify.com/authorize";
   const url = `${baseUrl}?${queryParams.toString()}`;
-  return <a href={url}><Button className='login-button'>Start playing</Button></a>
+  return <p className="text-md-center text-light"><a href={url}><Button className='login-button'>Start playing</Button></a></p>
 }

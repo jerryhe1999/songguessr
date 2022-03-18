@@ -8,8 +8,11 @@ export default function settings() {
     <Layout title="Settings">
       <h1 className="text-md-center text-light">Settings</h1>
       <Container>
-        <Row className='pt-5'>
-          <Col >
+        <Row className="align-items-center pt-5">
+          <Col>
+            <h3>Login with spotify: </h3>
+          </Col>
+          <Col>
             <SpotifyLoginLink />
           </Col>
         </Row>

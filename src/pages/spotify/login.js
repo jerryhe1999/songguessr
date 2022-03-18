@@ -6,6 +6,8 @@
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \cs499\song-guessr\src\pages\github\login.js
  */
+import Layout from 'src/components/Layout';
+import { Row, Col } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import SpotifyLoginLink from '../../components/SpotifyLoginLink';
@@ -51,13 +53,24 @@ export default function SpotifyLogin() {
   
   var count = 0;
   return (
-    <div>
-      {error && <p>Error: {error}</p>}
-      <h1>{user.display_name ? "Spotify logined": "Spotify login required"}</h1>
-      <SpotifyLoginLink />
-      {user.display_name && <p>Name: {user.display_name}</p>}
-      {user.email && <p>Email: {user.email}</p>}
+    <Layout title="Spotify login" css={false}>
+    <Row className="align-items-center pt-5">
+    <Col>
+      {error && <p className="text-md-center text-light">Error: {error}</p>}
+      <h1 className="text-md-center text-light">{user.display_name ? "Spotify logged in": "Spotify login required"}</h1>
+    </Col>
+    </Row>
+    <Row className="align-items-center pt-5">
+    <Col>
+      {user.display_name && <p className="text-md-center text-light">Name: {user.display_name}</p>}
+      {user.email && <p className="text-md-center text-light">Email: {user.email}</p>}
+    </Col>
+    </Row>
+    <Row className="align-items-center">
+    <Col>
       <SpotifyPlayLink />
-    </div>
+    </Col>
+    </Row>
+    </Layout>
   );
 }
