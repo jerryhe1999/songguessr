@@ -1,14 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "../components/Layout";
 import data from "./api/dummy_data_play.json";
 import { Carousel, Card, Image, Container, Form } from "react-bootstrap";
 import styles from "../styles/Play.module.css";
 import { useRouter } from "next/router";
 
+
+
 export default function play() {
   const [ error, setError ] = useState("");
-  const router = useRouter();
   const [ allRounds, setAllRounds ] = useState([]);
+  const [ secondsRemaining, setSecondsRemaining ] = useState(30);
+  const [ theScore, setScore ] = useState(0);
+  const [ answerStatus, setAnswerStatus ] = useState("")
+  const router = useRouter();
+  const ref = useRef(null);
+  const nextRound = () => {
+    ref.current.next();
+  }
+
+  function handleRadioBtn(e){
+    console.log(e)
+    if (e.target.value === "true") {
+      console.log("Correct!!!")
+      setAnswerStatus("Correct!!!")
+      setScore(theScore + 100)
+    } else {
+      setAnswerStatus("Incorrect")
+    }
+    // Give user time to acknowledge result
+    setTimeout('', 5000)
+    nextRound();
+  }
+
+  const settings = {
+    infinite: true,
+    wrap: false,
+    arrows: false,
+  };
 
   var songs;
   var gameSongs = {
@@ -24,8 +53,8 @@ export default function play() {
       }
     ]
   };
-    
   var playlists;
+  
   useEffect(() => {
     async function exchangeForAccessToken(code) {
       const res = await fetch('/api/tokenExchangePlaylist', {
@@ -88,7 +117,8 @@ export default function play() {
                 gameSongs.round[i].songs[j] = songs[randNum].track
               }
             }
-            
+            // Randomize order for correct song
+            gameSongs.round[i].songs.sort(() => Math.random() - 0.5)
           }
           console.log("chosen songs==", gameSongs)
           setAllRounds(gameSongs.round)
@@ -99,69 +129,18 @@ export default function play() {
       exchangeForAccessToken(router.query.code);
     }
   }, [ router.query.code ]);
-
-  /*
-  const round1 = gameSongs.round[0].songs
-  const round2 = gameSongs.round[1].songs
-  const round3 = gameSongs.round[2].songs
-  */
-  /*
-  return (
-    <Layout title="Play" css={false}>
-      {error && <p>Error: {error}</p>}
-      <h1 className="text-md-center pt-5">Time Left: 15 Seconds</h1>
-      <Carousel style={{ width: "100vw" }} interval={null} wrap={false}>
-        {data.map((item, key) => (
-          <Carousel.Item eventKey={key}>
-            <Container>
-              <div key={key} className={styles.carItem}>
-                <div className={styles.carPhoto}>
-                  <Image src={data.image} width={360} height={180} />
-                </div>
-                <div className={styles.carPhoto}>
-                <Card className={"bg-dark text-white"}  style={{ width: '30rem' }} border="success">
-                  <Container>
-                  <Form className="text-md-center p-2">
-                    <Form.Check
-                      type={"radio"}
-                      id={key}
-                      label={item.option_1}
-                      name={`group${key}`}
-                      isValid
-                    />
-                    <Form.Check
-                      type={"radio"}
-                      id={key}
-                      label={item.option_2}
-                      name={`group${key}`}
-                      isValid
-                    />
-                    <Form.Check
-                      type={"radio"}
-                      id={key}
-                      label={item.option_3}
-                      name={`group${key}`}
-                      isValid
-                    />
-                  </Form>
-                  </Container>  
-                </Card>
-                </div>
-              </div>
-            </Container>
-          </Carousel.Item>
-        ))}
-      </Carousel>
-    </Layout>
-  );
-  */
   
   return (
     <Layout title="Play" css={false}>
       {error && <p>Error: {error}</p>}
-      <h1 className="text-md-center pt-5">Time Left: 15 Seconds</h1>
-      <Carousel style={{ width: "100vw" }} interval={null} wrap={false}>
-        {allRounds.map((round, key) => console.log("==round", round) || (
+      <h3 className="text-md-center pt-3">Score: {theScore}</h3>
+      <h3 className="text-md-center pt-5">Time Left: {secondsRemaining} Seconds</h3>
+      <h3 className="text-md-center pt-5">{answerStatus}</h3>
+      <Carousel 
+        ref={ref} style={{ width: "100vw" }} controls={false} interval={null} 
+        wrap={false} prevIcon={false} nextIcon={false} indicators={false}
+      >
+        {allRounds.map((round, key) => (
           <Carousel.Item eventKey={key}>
             <Container>
               <div key={key} className={styles.carItem}>
@@ -171,13 +150,16 @@ export default function play() {
                 <div className={styles.carPhoto}>
                 <Card className={"bg-dark text-white"}  style={{ width: '30rem' }} border="success">
                   <Container>
-                  <Form className="text-md-center p-2">
-                    {round.songs.map((item, key1) => console.log("==item", item) || (
+                  <Form className="text-md-left p-2">
+                    {round.songs.map((item, key1) => (
                     <Form.Check
+                      onClick={(e) => handleRadioBtn(e)}
                       type={"radio"}
+                      guessedCorrect={item.guessedCorrect}
                       id={key}
                       label={`${item.artist}, ${item.name}, ${item.albumName}`}
                       name={`group${key}`}
+                      value={item.guessedCorrect}
                       isValid
                     />
                     ))}

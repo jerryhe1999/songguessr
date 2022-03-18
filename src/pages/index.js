@@ -3,6 +3,7 @@ import fetch from 'isomorphic-unfetch';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import Layout from "../components/Layout";
+import {Button} from 'react-bootstrap'
 
 export default function Home() {
   const router = useRouter();
@@ -28,14 +29,14 @@ export default function Home() {
   return (
     <Layout title={"Home"}>
       <h1>Welcome!</h1>
-      <button onClick={async () => {
+      <Button className='logout-button' onClick={async () => {
         const res = await fetch('/api/logout')
         if (res.status === 200) {
           router.push(`/login?redirect=${router.asPath}`)
         }
       }}>
         Log out
-      </button>
+      </Button>
       {user.name && <p>Name: {user.name}</p>}
       {user.email && <p>Email: {user.email}</p>}
     </Layout>

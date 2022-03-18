@@ -7,7 +7,7 @@
  * @FilePath: \cs499\song-guessr\src\components\SpotifyLoginLink.js
  */
 import React from 'react';
-
+import {Button} from 'react-bootstrap'
 export default function SpotifyLoginLink() {
   const queryParams = new URLSearchParams({
     response_type: 'code',
@@ -17,5 +17,5 @@ export default function SpotifyLoginLink() {
   });
   const baseUrl = "https://accounts.spotify.com/authorize";
   const url = `${baseUrl}?${queryParams.toString()}`;
-  return <a href={url}>Login with Spotify</a>
+  return <a href={url}><Button className='login-button'>Login with Spotify</Button></a>
 }

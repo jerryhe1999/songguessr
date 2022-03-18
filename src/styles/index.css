@@ -27,3 +27,11 @@ body{
   height: 1em;
   margin-left: 10px;
 }
+
+.logout-button, .login-button {
+  background-color: #198754;
+}
+
+.logout-button:hover, .login-button:hover {
+  background-color: #115c39;
+}
