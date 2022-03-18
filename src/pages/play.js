@@ -43,21 +43,21 @@ export default function play() {
   
 
   useEffect(() => {
-    if (timeLeft === 0) {
-      console.log("!!!")
-      setAnswerStatus("Incorrect")
-      setRoundCounter(prevCount => prevCount + 1)
-      setTimeout(function() {
-        setAnswerStatus("")
-        nextRound();
-        nextSong();
-        setTimeLeft(30)
-      }, 5000)
-    }
     const intervalId = setInterval(() => {
       setTimeLeft((t) => t - 1);
+      if (timeLeft < 0) {
+        // never reached?
+        console.log("!!!") // never logs
+        setAnswerStatus("Incorrect")
+        setRoundCounter(prevCount => prevCount + 1)
+        setTimeout(function() {
+          setAnswerStatus("")
+          nextRound();
+          nextSong();
+          setTimeLeft(30);
+        }, 5000)
+      }
     }, 1000);
-    
     return () => clearInterval(intervalId);
   }, []);
 
