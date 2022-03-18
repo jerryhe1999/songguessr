@@ -4,17 +4,36 @@ import data from "./api/dummy_data_play.json";
 import { Carousel, Card, Image, Container, Form } from "react-bootstrap";
 import styles from "../styles/Play.module.css";
 import { useRouter } from "next/router";
-
-
+import ReactAudioPlayer from "react-audio-player";
 
 export default function play() {
   const [ error, setError ] = useState("");
   const [ allRounds, setAllRounds ] = useState([]);
   const [ secondsRemaining, setSecondsRemaining ] = useState(30);
   const [ theScore, setScore ] = useState(0);
-  const [ answerStatus, setAnswerStatus ] = useState("")
+  const [ answerStatus, setAnswerStatus ] = useState("");
+  const [ roundCounter, setRoundCounter ] = useState(-1);
+  const [ songUrl, setSongUrl ] = useState("");
+  const [correctSongs, setCorrectSongs] = useState([]);
   const router = useRouter();
   const ref = useRef(null);
+  //var correctSongs = [];
+  var songs;
+  var playlists;
+  var gameSongs = {
+    round: [
+      {
+        songs: [{}],
+      },
+      {
+        songs: [{}],
+      },
+      {
+        songs: [{}],
+      }
+    ]
+  };
+
   const nextRound = () => {
     ref.current.next();
   }
@@ -32,32 +51,25 @@ export default function play() {
     setTimeout(function() {
       setAnswerStatus("")
       nextRound();
+      nextSong();
     }, 5000)
-    
   }
 
-  const settings = {
-    infinite: true,
-    wrap: false,
-    arrows: false,
-  };
+  function nextSong() {
+    setRoundCounter(roundCounter++)
+    console.log("==nextSong call",correctSongs)
+    setSongUrl(correctSongs[roundCounter].preview_url)
+  }
 
-  var songs;
-  var gameSongs = {
-    round: [
-      {
-        songs: [{}],
-      },
-      {
-        songs: [{}],
-      },
-      {
-        songs: [{}],
-      }
-    ]
-  };
-  var playlists;
-  
+  // Randomize order for correct song
+  function randomizer() {
+    console.log("gameSongs before randomization", gameSongs)
+    for (var i = 0; i < 3; i++) {
+      gameSongs.round[i].songs.sort(() => Math.random() - 0.5)
+    }
+    console.log("gameSongs after randomization", gameSongs)
+  }
+
   useEffect(() => {
     async function exchangeForAccessToken(code) {
       const res = await fetch('/api/tokenExchangePlaylist', {
@@ -109,7 +121,9 @@ export default function play() {
                 songs[randNum].track.albumName = songs[randNum].track.album.name
                 songs[randNum].track.guessedCorrect = true
                 gameSongs.round[i].songs[j] = songs[randNum].track
-              
+                //correctSongs.push(gameSongs.round[i].songs[j])
+                setCorrectSongs((currentState) => [...currentState, gameSongs.round[i].songs[j]])
+                console.log(correctSongs)
               } else {
                 // !!! has possibility to duplicate choice
                 // Create check to prevent same song being chosen twice
@@ -120,10 +134,13 @@ export default function play() {
                 gameSongs.round[i].songs[j] = songs[randNum].track
               }
             }
-            // Randomize order for correct song
-            gameSongs.round[i].songs.sort(() => Math.random() - 0.5)
+            // create list of correct songs for audio output
           }
-          console.log("chosen songs==", gameSongs)
+          nextSong()
+          //setSongUrl(correctSongs[roundCounter].preview_url)
+          randomizer();
+          console.log("==correct songs", correctSongs)
+          console.log("==game songs", gameSongs)
           setAllRounds(gameSongs.round)
         }
       }
@@ -132,13 +149,14 @@ export default function play() {
       exchangeForAccessToken(router.query.code);
     }
   }, [ router.query.code ]);
-  
+
   return (
     <Layout title="Play" css={false}>
       {error && <p>Error: {error}</p>}
       <h3 className="text-md-center pt-3">Score: {theScore}</h3>
       <h3 className="text-md-center pt-5">Time Left: {secondsRemaining} Seconds</h3>
       <h3 className="text-md-center pt-5">{answerStatus}</h3>
+      <ReactAudioPlayer src={songUrl} autoPlay={true} volume={0.3}/>
       <Carousel 
         ref={ref} style={{ width: "100vw" }} controls={false} interval={null} 
         wrap={false} prevIcon={false} nextIcon={false} indicators={false}
